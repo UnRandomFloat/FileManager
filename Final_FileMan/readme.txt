@@ -1,5 +1,3 @@
-# FileManager
-Future Manager
 Файловый мэнеджер Final_FileMan
 
 Краткое описание.
