@@ -80,7 +80,7 @@ namespace Final_FileMan
             string newpath = Console.ReadLine();
             while (!Directory.Exists(newpath) || string.IsNullOrEmpty(newpath))
             {
-                Console.WriteLine("Введен не корректный(не сущуствующий или у вас не достаточно прав) путь.\n Введите стартовый путь или нажмите Enter чтобы выбрать путь по умолчанию:");
+                Console.WriteLine("Введен некорректный(несуществующий или у вас недостаточно прав) путь.\n Введите стартовый путь или нажмите Enter чтобы выбрать путь по умолчанию:");
                 newpath = Console.ReadLine();
                 
             }
@@ -88,12 +88,12 @@ namespace Final_FileMan
         }
         static int ElemPerPageSetup()
         {
-            Console.WriteLine("Укажите максимальное количество элементов выводимых командой ls на одной странице");
+            Console.WriteLine("Укажите максимальное количество элементов выводимых командой ls на одной странице (от 1 до 100)");
             string newCount = Console.ReadLine();
             int setCount;
-            while (!int.TryParse(newCount, out setCount) || setCount<1)
+            while (!int.TryParse(newCount, out setCount) || setCount<1 || setCount>100)
             {
-                Console.WriteLine("Число элементов введено не корректно. Повторите ввод (используйте только целое чило , больше 0)");
+                Console.WriteLine("Число элементов введено не корректно. Повторите ввод (используйте только целое чило , больше 0 но менее 100)");
                 newCount = Console.ReadLine();
             }
             return setCount;

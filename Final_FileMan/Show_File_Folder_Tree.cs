@@ -22,20 +22,17 @@ namespace Final_FileMan
                 switch (cmdArray.Length)
                 {
                     case 1:
-
                         Console.WriteLine(thisPath);
                         Show_Tree(thisPath, 2, 0);
                         break;
                     case 2:
                         if (Directory.Exists(thisPath + @"\" + cmdArray[1]))
                         {
-
                             Console.WriteLine(thisPath + @"\" + cmdArray[1]);
                             Show_Tree(thisPath + @"\" + cmdArray[1], 2, 0);
                         }
                         else if (Directory.Exists(cmdArray[1]))
                         {
-
                             Console.WriteLine(cmdArray[1]);
                             Show_Tree(cmdArray[1], 2, 0);
                         }
@@ -70,6 +67,10 @@ namespace Final_FileMan
                             {
                                 throw new WrongDeepLvl("Неверно указан уровень раскрытия списка файлов. Проверьте праывильность и повторите ввод!");
                             }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Не правильно введен путь!");
                         }
                         break;
                     case 4:

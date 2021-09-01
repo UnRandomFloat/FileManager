@@ -24,10 +24,10 @@ namespace Final_FileMan
             bool repit = true;
             while (repit)
             {
-                Console.Write(curentPath + " > ");
+                Console.Write(Path.GetFullPath(curentPath) + " > ");
                 Show_File_Folder_Tree.elemCount = 0;
                 string cmd = Console.ReadLine();
-                Cmd_Dispetcher.StringToCommand(cmd, curentPath, out repit);
+                Cmd_Dispetcher.StringToCommand(cmd, Path.GetFullPath(curentPath), out repit);
             }
 
         }
