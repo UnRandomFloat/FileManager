@@ -19,72 +19,80 @@ namespace Final_FileMan
         /// <param name="onemoretime">Индикатор завершения работы программы</param>
         public static void StringToCommand(string fromConsole, string thisPath, out bool onemoretime)
         {
-            onemoretime = false;
-            if (fromConsole.Length == 0)
+            try
             {
-                Console.WriteLine("Введена пустая команда.список доступных команд - scmd");
-                onemoretime = true;
-                return;
-            }
-            string[] separ = { " '", "'" };
-            string[] comand = null;
-            if (fromConsole.Split(separ, StringSplitOptions.RemoveEmptyEntries).Length > 1)
-            {
-                comand = fromConsole.Split(separ, StringSplitOptions.RemoveEmptyEntries);
-            }
-            else
-            {
-                comand = fromConsole.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            }
-            switch (comand[0].Trim())
-            {
-                //Команда вывода дерева файловой системы
-                case "ls":
-                    Show_File_Folder_Tree.Start(comand, thisPath);
+                onemoretime = false;
+                if (fromConsole.Length == 0)
+                {
+                    Console.WriteLine("Введена пустая команда. Список доступных команд - scmd");
                     onemoretime = true;
-                    break;
-                //Команда смены активной директории
-                case "cd":
-                    Program.curentPath = Change_Directory.Cd(comand, thisPath);
-                    onemoretime = true;
-                    break;
-                //Команда вывода информации о файле или папке
-                case "inf":
-                    Info.File_Info(comand, thisPath);
-                    onemoretime = true;
-                    break;
+                    return;
+                }
+                string[] separ = { " '", "'" };
+                string[] comand = null;
+                if (fromConsole.Split(separ, StringSplitOptions.RemoveEmptyEntries).Length > 1)
+                {
+                    comand = fromConsole.Split(separ, StringSplitOptions.RemoveEmptyEntries);
+                }
+                else
+                {
+                    comand = fromConsole.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                switch (comand[0].Trim())
+                {
+                    //Команда вывода дерева файловой системы
+                    case "ls":
+                        Show_File_Folder_Tree.Start(comand, thisPath);
+                        onemoretime = true;
+                        break;
+                    //Команда смены активной директории
+                    case "cd":
+                        Program.curentPath = Change_Directory.Cd(comand, thisPath);
+                        onemoretime = true;
+                        break;
+                    //Команда вывода информации о файле или папке
+                    case "inf":
+                        Info.File_Info(comand, thisPath);
+                        onemoretime = true;
+                        break;
                     //Команда удаление файла или папки
-                case "rm":
-                    RemoveFolderFile.removeFolderOrFile(comand, thisPath);
-                    onemoretime = true;
-                    break;
-                //Команда копирования файла или папки(рекурсивно)
-                case "cp":
-                    FolderFileCopy.WhatWeHaveToCopy(comand, thisPath);
-                    onemoretime = true;
-                    break;
+                    case "rm":
+                        RemoveFolderFile.removeFolderOrFile(comand, thisPath);
+                        onemoretime = true;
+                        break;
+                    //Команда копирования файла или папки(рекурсивно)
+                    case "cp":
+                        FolderFileCopy.WhatWeHaveToCopy(comand, thisPath);
+                        onemoretime = true;
+                        break;
                     //Вывод списка доступных команд
-                case "scmd":
-                    CmdList();
-                    onemoretime = true;
-                    break;
+                    case "scmd":
+                        CmdList();
+                        onemoretime = true;
+                        break;
                     //Выход из программы
-                case "exit":
-                    Console.WriteLine("Программа завершена! Всего Доброго!");
-                    Console.ReadLine();
-                    onemoretime = false;
-                    break;
+                    case "exit":
+                        Console.WriteLine("Программа завершена! Всего Доброго!");
+                        Console.ReadLine();
+                        onemoretime = false;
+                        break;
                     //Настройки программы
-                case "set":
-                    Setups.StartSetting();
-                    onemoretime = true;
-                    break;
-                default:
-                    Console.WriteLine($"Не удалось распознать команду ({comand[0].Trim()}) (список доступных команд и аргументов - scmd)");
-                    onemoretime = true;
-                    break;
-            }
+                    case "set":
+                        Setups.StartSetting();
+                        onemoretime = true;
+                        break;
+                    default:
+                        Console.WriteLine($"Не удалось распознать команду ({comand[0].Trim()}) (список доступных команд и аргументов - scmd)");
+                        onemoretime = true;
+                        break;
+                }
         }
+            catch(IndexOutOfRangeException)
+            {
+            Console.WriteLine("Введена пустая команда. Повторите ввод.");
+                onemoretime = true;
+            }
+}
 
 
         /// <summary>

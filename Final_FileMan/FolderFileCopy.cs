@@ -65,28 +65,57 @@ namespace Final_FileMan
 
         static void FolderCopy(string sourcePath, string targetPath)
         {
+            // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourcePath);
+
+            if (!dir.Exists)
+            {
+                Console.WriteLine("Директория не найдена");
+            }
+
             DirectoryInfo[] dirs = dir.GetDirectories();
-            FileInfo[] file = dir.GetFiles();
-            if (Directory.Exists(sourcePath) && targetPath.Contains(@":\"))
+
+            // If the destination directory doesn't exist, create it.       
+            Directory.CreateDirectory(targetPath);
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
             {
-                Directory.CreateDirectory(targetPath);
-                foreach (FileInfo fi in file)
-                {
-                    string tempPath = Path.Combine(targetPath, fi.Name);
-                    fi.CopyTo(tempPath, false);
-                }
-                foreach (DirectoryInfo folders in dirs)
-                {
-                    string tempPath = Path.Combine(targetPath, folders.Name);
-                    FolderCopy(folders.FullName, tempPath);
-                    Console.WriteLine($"{sourcePath} успешно скопирован {targetPath}.");
-                }
+                string tempPath = Path.Combine(targetPath, file.Name);
+                file.CopyTo(tempPath, false);
             }
-            else 
-            {
-                Console.WriteLine($"Путь {targetPath} введен некорректно. Повторите ввод!");
-            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+           
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string tempPath = Path.Combine(targetPath, subdir.Name);
+                    FolderCopy(subdir.FullName, tempPath);
+                }
+
+            //DirectoryInfo dir = new DirectoryInfo(sourcePath);
+            //DirectoryInfo[] dirs = dir.GetDirectories();
+            //FileInfo[] file = dir.GetFiles();
+            //if (Directory.Exists(sourcePath) && targetPath.Contains(@":\"))
+            //{
+            //    Directory.CreateDirectory(targetPath);
+            //    foreach (FileInfo fi in file)
+            //    {
+            //        string tempPath = Path.Combine(targetPath, fi.Name);
+            //        fi.CopyTo(tempPath, false);
+            //    }
+            //    foreach (DirectoryInfo folders in dirs)
+            //    {
+            //        string tempPath = Path.Combine(targetPath, folders.Name);
+            //        FolderCopy(folders.FullName, tempPath);
+            //        Console.WriteLine($"{sourcePath} успешно скопирован {targetPath}.");
+            //    }
+            //}
+            //else 
+            //{
+            //    Console.WriteLine($"Путь {targetPath} введен некорректно. Повторите ввод!");
+            //}
         }
 
         static void FileCopy(string sourcePath, string targetPath)

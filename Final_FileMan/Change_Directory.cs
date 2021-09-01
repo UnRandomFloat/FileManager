@@ -14,73 +14,63 @@ namespace Final_FileMan
         /// <returns>string новый путь активного каталога</returns>
         public static string Cd(string[] cmdArray, string thisPath)
         {
-            switch (cmdArray.Length)
-            {
-                case 2:
-                    // Подъем на папку вверх
-                    if (cmdArray[1] == "..")
-                    {
-                        return TryPathException(thisPath);
-                    }
-                    // Переход в корневой каталог
-                    else if (cmdArray[1] == "~")
-                    {
-                        SaveLastPath(Directory.GetDirectoryRoot(thisPath));
-                        return Directory.GetDirectoryRoot(thisPath);
-                    }
-                    // Переход в указанный каталог
-                    else if (Directory.Exists(cmdArray[1]))
-                    {
-                        SaveLastPath(cmdArray[1]);
-                        return cmdArray[1];
-                    }
-                    // Переход в указанный подкаталог активного каталога
-                    else if (Directory.Exists(thisPath + @"\" + cmdArray[1]))
-                    {
-                        if (!thisPath.EndsWith(@"\"))
-                        {
-                            SaveLastPath(thisPath + @"\" + cmdArray[1]);
-                            return thisPath + @"\" + cmdArray[1];
-                        }
-                        else
-                        {
-                            SaveLastPath(thisPath + cmdArray[1]);
-                            return thisPath + cmdArray[1];
-                        }
-                    }
-                    Console.WriteLine($"Указанный путь {cmdArray[1]} не найден либо является файлом, укажите директорию") ;
-                    return thisPath;
-                default:
-                    Console.WriteLine($"Неверное количество аргументов комадны cd (введите scmd для вывода списока доступных команд и аргументов");
-                    return thisPath;
-            }
-        }
-
-        static string TryPathException(string thisPath)
-        {
-            string newPath = "";
             try
             {
-                if (thisPath.EndsWith(@"\"))
+                string strToThisPath = Path.GetFullPath(thisPath);
+                string strToCmdArray = Path.GetFullPath(cmdArray[1]);
+                switch (cmdArray.Length)
                 {
-                    DirectoryInfo di = Directory.GetParent(thisPath);
-                    newPath = di.Parent.FullName;
-                }
-                else
-                {
-                    DirectoryInfo di = Directory.GetParent(thisPath+ @"\");
-                    newPath = di.Parent.FullName;
+                    case 2:
+                        // Подъем на папку вверх
+                        if (cmdArray[1] == "..")
+                        {
+                            DirectoryInfo di = Directory.GetParent(strToThisPath + @"\");
+                            string newPath = di.Parent.FullName;
+                            SaveLastPath(newPath);
+                            return newPath;
+
+                        }
+                        // Переход в корневой каталог
+                        else if (cmdArray[1] == "~")
+                        {
+                            SaveLastPath(Path.GetPathRoot(strToThisPath));
+                            return Path.GetPathRoot(strToThisPath);
+                        }
+
+                        // Переход в указанный каталог
+                        else if (Directory.Exists(strToCmdArray))
+                        {
+                            SaveLastPath(strToCmdArray);
+                            return strToCmdArray;
+                        }
+
+                        // Переход в указанный подкаталог активного каталога
+                        else if (Directory.Exists(Path.Combine(thisPath, cmdArray[1])))
+                        {
+                            SaveLastPath(Path.Combine(thisPath, cmdArray[1]));
+                            return Path.Combine(thisPath, cmdArray[1]);
+                        }
+                        Console.WriteLine($"Указанный путь {cmdArray[1]} не найден либо является файлом, укажите директорию");
+                        return strToThisPath;
+                    default:
+                        Console.WriteLine($"Неверное количество аргументов комадны cd (введите scmd для вывода списока доступных команд и аргументов");
+                        return strToThisPath;
                 }
             }
-            catch
+            catch (ArgumentException)
             {
-
-                return thisPath; 
+                Console.WriteLine("Путь задан некорректно. Повторите ввод");
+                return thisPath;
             }
-            SaveLastPath(newPath);
-            return newPath;
 
+            catch (NullReferenceException)
+            {
+                Console.WriteLine("Вы уже в корневом каталоге");
+                return thisPath;
+            }
         }
+
+
         static void SaveLastPath(string pathToSave)
         {
             Properties.Settings.Default.LastActivePath = pathToSave;
